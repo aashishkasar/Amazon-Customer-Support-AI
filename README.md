@@ -39,17 +39,13 @@ An AI-powered customer support system that answers queries **strictly based on p
 
 ```mermaid
 flowchart TD
-    A[User Input] --> B[Query + Policy]
-    B --> C[Prompt Engineering Layer]
-    C --> D[LLM (Groq)]
-    D --> E[Generate Multiple Answers]
-    E --> F[Select Best Answer]
-    F --> G[Verification Step]
-    G --> H[Final JSON Output]
-
-    style A fill:#f9f,stroke:#333
-    style D fill:#bbf,stroke:#333
-    style H fill:#bfb,stroke:#333
+    A["User Input"] --> B["Query + Policy"]
+    B --> C["Prompt Engineering Layer"]
+    C --> D["LLM (Groq)"]
+    D --> E["Generate Multiple Answers"]
+    E --> F["Select Best Answer"]
+    F --> G["Verification Step"]
+    G --> H["Final JSON Output"]
 ```
 
 ---
