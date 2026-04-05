@@ -31,7 +31,6 @@ uploaded_file = st.file_uploader(
 # ---------------------------
 policy = ""
 
-# Priority: File > Text
 if uploaded_file is not None:
     if uploaded_file.type == "text/plain":
         policy = uploaded_file.read().decode("utf-8")
@@ -47,39 +46,49 @@ if uploaded_file is not None:
         policy = policy_text
 
         # ---------------------------
-        # ▶️ Generate Button
+        # ▶️ Generate Button (✅ OUTSIDE)
         # ---------------------------
-        if st.button("Generate"):
+if st.button("Generate"):
 
-            if not query:
-                st.warning("⚠️ Please enter Query")
+    st.write("🚀 Button clicked")
 
-            elif not policy:
-                st.warning("⚠️ Please provide Policy (text or file)")
+    if not query:
+        st.warning("⚠️ Please enter Query")
 
-            else:
-                with st.spinner("Thinking..."):
+    elif not policy:
+        st.warning("⚠️ Policy is empty (PDF may not be readable)")
 
-                    llm = get_llm(api_key)
-                    prompt = get_prompt()
+    else:
+        st.write("Query:", query)
+        st.write("Policy length:", len(policy))
 
-                    final_prompt = prompt.format(query=query, policy=policy)
-                    response = llm.invoke(final_prompt)
+        with st.spinner("Thinking..."):
 
-                    try:
-                        result = json.loads(response.content)
+            llm = get_llm(api_key)
+            prompt = get_prompt()
 
-                        st.success("✅ Answer Generated")
+            final_prompt = prompt.format(query=query, policy=policy)
 
-                        st.write("### 📌 Answer")
-                        st.write(result.get("answer"))
+            st.write("⏳ Calling LLM...")
 
-                        st.write("### 🧠 Reason")
-                        st.write(result.get("reason"))
+            response = llm.invoke(final_prompt)
 
-                        st.write("### 📊 Confidence")
-                        st.write(result.get("confidence"))
+            st.write("🔍 Raw Response:")
+            st.code(response.content)
+            try:
+                result = json.loads(response.content)
 
-                    except:
-                        st.error("⚠️ Invalid JSON output")
-                        st.code(response.content)
+                st.success("✅ Answer Generated")
+
+                st.write("### 📌 Answer")
+                st.write(result.get("answer"))
+
+                st.write("### 🧠 Reason")
+                st.write(result.get("reason"))
+
+                st.write("### 📊 Confidence")
+                st.write(result.get("confidence"))
+
+            except Exception as e:
+                st.error("⚠️ JSON Parsing Failed")
+                st.write("Error:", e)
